@@ -3,9 +3,43 @@
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
-(defroutes app-routes
-  (GET "/" [] "Hello World")
+(defn wrap-one
+	[handler]
+	(fn [request]
+		(do 
+			(print "IN WRAP ONE\n")
+			(handler request)
+		)
+	)
+)
+
+(defn wrap-two
+	[handler]
+	(fn [request]
+		(do 
+			(print "IN WRAP TWO\n")
+			(handler request)
+		)
+	)
+)
+
+
+(def need-middle-routes
+	(->
+		(routes
+  		(GET "/two" [] "Hello two WRAP One")
+  		(GET "/one" [] "Hello one WRAP One"))
+			(wrap-routes wrap-one)
+			(wrap-routes wrap-two)))
+
+(defroutes no-middle-routes
+  (GET "/no" [] "Hello no wrap")
   (route/not-found "Not Found"))
+
+(def app-routes 
+	(routes
+		need-middle-routes
+		no-middle-routes))
 
 (def app
   (wrap-defaults app-routes site-defaults))
