@@ -1,7 +1,8 @@
 (ns test-routes.handler
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
+            [ring.middleware.defaults :refer [wrap-defaults site-defaults]])
+	(:require [ring.middleware.session :refer [wrap-session]]))
 
 (defn wrap-one
 	[handler]
@@ -29,6 +30,7 @@
 		(routes
   		(GET "/two" [] "Hello two WRAP One")
   		(GET "/one" [] "Hello one WRAP One"))
+			(wrap-session)
 			(wrap-routes wrap-one)
 			(wrap-routes wrap-two)))
 
