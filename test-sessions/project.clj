@@ -12,5 +12,6 @@
 		{:dependencies [
 				[javax.servlet/servlet-api "2.5"]
       	[ring/ring-mock "0.3.0"]
+      	[ring "1.5.0"]
 				[midje "1.6.3"]
 			]}})

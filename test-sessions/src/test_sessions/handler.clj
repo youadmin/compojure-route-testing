@@ -4,6 +4,11 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]])
 	(:require [ring.middleware.session :refer [wrap-session]]))
 
+;; steps::: 
+;; in handler, do you see a session?
+;; mock a session. you should see a session now
+;; mock it with a property. can you see the property (say cart-id)?
+
 (defn wrap-one
 	[handler]
 	(fn [request]
@@ -15,18 +20,18 @@
 )
 
 (def need-middle-routes
+	(routes
+		(GET "/one" 
+			{session :session} 
+			(print "session::: " session)
+			"Hello one WRAP One"
+		)))
+
+(def wrapped-need-middle-routes
 	(->
-		(routes
-  		(GET "/two" 
-				[] 
-				"Hello two WRAP One"
-			)
-  		(GET "/one" 
-				[] 
-				"Hello one WRAP One"
-			))
-			(wrap-session)
-			(wrap-routes wrap-one)))
+		need-middle-routes
+		(wrap-routes wrap-session)
+		(wrap-routes wrap-one)))
 
 (defroutes no-middle-routes
   (GET "/no" [] "Hello no wrap")
@@ -34,18 +39,8 @@
 
 (def app-routes 
 	(routes
-		need-middle-routes
+		wrapped-need-middle-routes
 		no-middle-routes))
 
 (def app app-routes)
 
-(comment (str
-	"from professional clojure...."
-	"(def body-routes (-> (route (GET etc) (wrap-routes mid-one))))"
-	"(defroutes other-routes (..)"
-
-	"and then combine them...."
-	"(def app-routes (routes body-routes other-routes))"
-	"finallly"
-	"(def app (-> app-routes wrap-500-catchall (wrap-defaults api-defaults)))"
-))
