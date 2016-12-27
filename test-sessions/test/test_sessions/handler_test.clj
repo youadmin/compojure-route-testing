@@ -4,8 +4,7 @@
             [ring.mock.request :as mock]
             [test-sessions.handler :refer :all])
  (:require [compojure.core :refer :all]
-            [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]])
+            [compojure.route :as route])
 	(:require [ring.middleware.session :refer [wrap-session]])
 	(:require [ring.middleware.session.store :refer [SessionStore]])
 	(:import [java.util UUID]))
